@@ -21,7 +21,7 @@ export type GameState = 'Init' | 'Checked' | 'Betted' | 'Folded' | 'Showdown';
 /**
  * ゲーム履歴の型定義
  */
-export type GameHistory = {
+export type History = {
   playerIds: [string, string];
   fstHand: number;
   sndHand: number;
