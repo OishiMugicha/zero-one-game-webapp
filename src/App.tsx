@@ -1,7 +1,7 @@
 import './App.css'
 import { useState } from 'react'
 import type { History, ActionType } from './types/game'
-import { currentTurn, currentPot, currentFstStack, currentSndStack, getAvailableActions } from './utils/gameCalculations'
+import { currentTurn, currentPot, currentFstStack, currentSndStack, getAvailableActions, fstBetAmount, sndBetAmount } from './utils/gameCalculations'
 
 function App() {
 
@@ -15,6 +15,9 @@ function App() {
   })
 
   const actions = getAvailableActions(history)
+  const minValue = Math.abs(fstBetAmount(history) - sndBetAmount(history))
+  const maxValue = 1
+  const [betAmount, setBetAmount] = useState<number>(minValue)
   const colorStyle = (a: ActionType) => ({
     backgroundColor: a === 'Fold' ? 'blue'
       : a === 'Call' ? 'green'
@@ -58,6 +61,20 @@ function App() {
               <button key={a} style={colorStyle(a)}>{a}</button>
             ))}
           </div>
+          {(actions.includes('Bet') || actions.includes('Raise')) && (
+            <div style={{ marginTop: '10px' }}>
+              <div style={{ marginBottom: '6px' }}>Bet amount: {betAmount}</div>
+              <input
+                type="range"
+                min={minValue}
+                max={maxValue}
+                step={0.01}
+                value={betAmount}
+                onChange={(e) => setBetAmount(parseFloat(e.target.value))}
+                style={{ width: '240px' }}
+              />
+            </div>
+          )}
         </section>
       </div>
     </>
