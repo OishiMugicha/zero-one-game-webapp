@@ -42,7 +42,7 @@
 
 .layout-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   text-align: left;
 }
@@ -67,10 +67,6 @@
   font-size: 1rem;
 }
 
-.third-column {
-  gap: 16px;
-}
-
 .subsection {
   display: flex;
   flex-direction: column;
@@ -83,8 +79,15 @@
   gap: 8px;
 }
 
+.history-panel {
+  max-height: 420px;
+}
+
 .history-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
 }

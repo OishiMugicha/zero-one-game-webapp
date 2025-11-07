@@ -109,24 +109,24 @@ function App() {
               </div>
             )}
           </div>
-          <div className="subsection">
-            <h2>履歴</h2>
-            <div className="history-list">
-              {history.actions.length === 0 ? (
-                <div style={badgeStyle}>アクションはまだありません</div>
-              ) : (
-                history.actions.map((action, idx) => (
-                  <div key={idx} style={badgeStyle}>
-                    <div>{action.type}</div>
-                    {'amount' in action && action.amount !== undefined && (
-                      <div>{action.amount.toFixed(2)}</div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
         </section>
+        <aside className="panel history-panel">
+          <h2>履歴</h2>
+          <div className="history-list">
+            {history.actions.length === 0 ? (
+              <div style={badgeStyle}>アクションはまだありません</div>
+            ) : (
+              history.actions.map((action, idx) => (
+                <div key={idx} style={badgeStyle}>
+                  <div>{action.type}</div>
+                  {'amount' in action && action.amount !== undefined && (
+                    <div>{action.amount.toFixed(2)}</div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </aside>
       </div>
     </>
   )
