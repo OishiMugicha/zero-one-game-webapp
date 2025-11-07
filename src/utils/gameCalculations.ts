@@ -90,7 +90,7 @@ export function getAvailableActions(history: History): ActionType[] {
     if (allinRequired) {
       return ['Fold', 'Call'];
     } else {
-      return ['Fold', 'Call', 'Bet', 'Allin'];
+      return ['Fold', 'Call', 'Raise', 'Allin'];
     }
   } else if (getGameState(history) === 'Folded' || getGameState(history) === 'Showdown') {
     return [];
