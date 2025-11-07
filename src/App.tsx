@@ -16,7 +16,7 @@ function App() {
 
   const actions = getAvailableActions(history)
   const minValue = Math.abs(fstBetAmount(history) - sndBetAmount(history))
-  const maxValue = 1
+  const maxValue = Math.max(currentFstStack(history), currentSndStack(history))
   const [betAmount, setBetAmount] = useState<number>(minValue)
   const colorStyle = (a: ActionType) => ({
     backgroundColor: a === 'Fold' ? 'blue'
@@ -41,6 +41,12 @@ function App() {
       <div style={barBase}><div style={barFill(value, color)} /></div>
     </div>
   )
+  const badgeStyle = {
+    padding: '8px 12px',
+    background: '#f3f4f6',
+    borderRadius: '6px',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+  }
   const handleActionClick = (actionType: ActionType) => {
     const action: Action = actionType === 'Bet' || actionType === 'Raise'
       ? { type: actionType, amount: betAmount }
@@ -59,48 +65,67 @@ function App() {
 
   return (
     <>
-      <div className="container">
-        <h1>Zero-One Game</h1>
-        <section>
-          <h2>ハンド</h2>
-          {renderBar('fstHand', history.fstHand, '#7a3cff')}
-          {renderBar('sndHand', history.sndHand, '#ff4d4f')}
-        </section>
-        <section>
-          <h2>ターン</h2>
-          <div>{currentTurn(history) === 'fst' ? '先手' : '後手'}</div>
-        </section>
-        <section>
-          <h2>ポット</h2>
-          {renderBar('pot', currentPot(history), '#ff9900')}
-        </section>
-        <section>
-          <h2>スタック</h2>
-          {renderBar('fstStack', currentFstStack(history), '#2d8cf0')}
-          {renderBar('sndStack', currentSndStack(history), '#19be6b')}
-        </section>
-        <section>
-          <h2>アクション</h2>
-          <div className="actions">
-            {actions.map(a => (
-              <button key={a} style={colorStyle(a)} onClick={() => handleActionClick(a)}>{a}</button>
-            ))}
-          </div>
-          {(actions.includes('Bet') || actions.includes('Raise')) && (
-            <div style={{ marginTop: '10px' }}>
-              {renderBar('betAmount', betAmount, '#ff4d4f')}
-              <input
-                type="range"
-                min={minValue}
-                max={maxValue}
-                step={0.01}
-                value={betAmount}
-                onChange={(e) => setBetAmount(parseFloat(e.target.value))}
-                style={{ width: '240px' }}
-              />
+      <div className="container" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <h1>Zero-One Game</h1>
+          <section>
+            <h2>ハンド</h2>
+            {renderBar('fstHand', history.fstHand, '#7a3cff')}
+            {renderBar('sndHand', history.sndHand, '#ff4d4f')}
+          </section>
+          <section>
+            <h2>ターン</h2>
+            <div>{currentTurn(history) === 'fst' ? '先手' : '後手'}</div>
+          </section>
+          <section>
+            <h2>ポット</h2>
+            {renderBar('pot', currentPot(history), '#ff9900')}
+          </section>
+          <section>
+            <h2>スタック</h2>
+            {renderBar('fstStack', currentFstStack(history), '#2d8cf0')}
+            {renderBar('sndStack', currentSndStack(history), '#19be6b')}
+          </section>
+          <section>
+            <h2>アクション</h2>
+            <div className="actions">
+              {actions.map(a => (
+                <button key={a} style={colorStyle(a)} onClick={() => handleActionClick(a)}>{a}</button>
+              ))}
             </div>
-          )}
-        </section>
+            {(actions.includes('Bet') || actions.includes('Raise')) && (
+              <div style={{ marginTop: '10px' }}>
+                {renderBar('betAmount', betAmount, '#ff4d4f')}
+                <input
+                  type="range"
+                  min={minValue}
+                  max={maxValue}
+                  step={0.01}
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(parseFloat(e.target.value))}
+                  style={{ width: '240px' }}
+                />
+              </div>
+            )}
+          </section>
+        </div>
+        <aside style={{ flex: 1 }}>
+          <h2>履歴</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {history.actions.length === 0 ? (
+              <div style={badgeStyle}>アクションはまだありません</div>
+            ) : (
+              history.actions.map((action, idx) => (
+                <div key={idx} style={badgeStyle}>
+                  <div>{action.type}</div>
+                  {'amount' in action && action.amount !== undefined && (
+                    <div>{action.amount.toFixed(2)}</div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </aside>
       </div>
     </>
   )
