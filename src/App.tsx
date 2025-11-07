@@ -2,6 +2,7 @@ import './App.css'
 import { useState } from 'react'
 import type { History, ActionType, Action } from './types/game'
 import { currentTurn, currentPot, currentFstStack, currentSndStack, getAvailableActions, fstBetAmount, sndBetAmount } from './utils/gameCalculations'
+import { randomAction } from './utils/strategy'
 
 function App() {
 
@@ -62,11 +63,39 @@ function App() {
     })
   }
 
+  const handleRandomAction = () => {
+    const action = randomAction(history)
+    setHistory(prev => {
+      const nextActions = [...prev.actions, action]
+      const nextHistory = { ...prev, actions: nextActions }
+      const nextMin = Math.abs(fstBetAmount(nextHistory) - sndBetAmount(nextHistory))
+      setBetAmount(nextMin)
+      return nextHistory
+    })
+  }
+
   return (
     <>
       <div className="layout-grid">
         <div className="grid-header">
           <h1>Zero-One Game</h1>
+          <div style={{ marginTop: '12px', marginBottom: '8px' }}>
+            <button
+              onClick={handleRandomAction}
+              style={{
+                padding: '10px 16px',
+                fontSize: '1rem',
+                backgroundColor: '#6366f1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '500'
+              }}
+            >
+              Random Action
+            </button>
+          </div>
         </div>
         <section className="panel">
           <h2>先手</h2>
