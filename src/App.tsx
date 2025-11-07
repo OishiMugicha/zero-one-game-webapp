@@ -1,11 +1,11 @@
 import './App.css'
 import { useState } from 'react'
-import type { History, ActionType } from './types/game'
+import type { History, ActionType, Action } from './types/game'
 import { currentTurn, currentPot, currentFstStack, currentSndStack, getAvailableActions, fstBetAmount, sndBetAmount } from './utils/gameCalculations'
 
 function App() {
 
-  const [history] = useState<History>({
+  const [history, setHistory] = useState<History>({
     playerIds: ['P1', 'P2'],
     fstHand: 0.14,
     sndHand: 0.83,
@@ -41,6 +41,21 @@ function App() {
       <div style={barBase}><div style={barFill(value, color)} /></div>
     </div>
   )
+  const handleActionClick = (actionType: ActionType) => {
+    const action: Action = actionType === 'Bet' || actionType === 'Raise'
+      ? { type: actionType, amount: betAmount }
+      : actionType === 'Allin'
+        ? { type: 'Allin' }
+        : { type: actionType }
+
+    setHistory(prev => {
+      const nextActions = [...prev.actions, action]
+      const nextHistory = { ...prev, actions: nextActions }
+      const nextMin = Math.abs(fstBetAmount(nextHistory) - sndBetAmount(nextHistory))
+      setBetAmount(nextMin)
+      return nextHistory
+    })
+  }
 
   return (
     <>
@@ -68,7 +83,7 @@ function App() {
           <h2>アクション</h2>
           <div className="actions">
             {actions.map(a => (
-              <button key={a} style={colorStyle(a)}>{a}</button>
+              <button key={a} style={colorStyle(a)} onClick={() => handleActionClick(a)}>{a}</button>
             ))}
           </div>
           {(actions.includes('Bet') || actions.includes('Raise')) && (
