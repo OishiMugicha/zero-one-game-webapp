@@ -9,9 +9,9 @@ function App() {
     playerIds: ['P1', 'P2'],
     fstHand: 0.14,
     sndHand: 0.83,
-    fstInitialStack: 1,
-    sndInitialStack: 1,
-    actions: [{'type': 'Bet', 'amount': 0.3}, {'type': 'Raise', 'amount': 0.5}],
+    fstInitialStack: 0.5,
+    sndInitialStack: 0.5,
+    actions: [{'type': 'Bet', 'amount': 0.2}, {'type': 'Raise', 'amount': 0.35}],
   })
 
   const actions = getAvailableActions(history)
@@ -31,6 +31,16 @@ function App() {
     cursor: 'pointer',
     marginRight: '8px'
   })
+  const barBase = { height: 12, background: '#eee', borderRadius: 6 }
+  const barFill = (w: number, color: string) => ({ width: `${Math.max(0, Math.min(1, w)) * 100}%`, height: '100%', background: color, borderRadius: 6 })
+  const renderBar = (label: string, value: number, color: string) => (
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+        <span>{label}</span><span>{value.toFixed(2)}</span>
+      </div>
+      <div style={barBase}><div style={barFill(value, color)} /></div>
+    </div>
+  )
 
   return (
     <>
@@ -38,8 +48,8 @@ function App() {
         <h1>Zero-One Game</h1>
         <section>
           <h2>ハンド</h2>
-          <div>fstHand: {history.fstHand}</div>
-          <div>sndHand: {history.sndHand}</div>
+          {renderBar('fstHand', history.fstHand, '#7a3cff')}
+          {renderBar('sndHand', history.sndHand, '#ff4d4f')}
         </section>
         <section>
           <h2>ターン</h2>
@@ -47,12 +57,12 @@ function App() {
         </section>
         <section>
           <h2>ポット</h2>
-          <div>{currentPot(history)}</div>
+          {renderBar('pot', currentPot(history), '#ff9900')}
         </section>
         <section>
           <h2>スタック</h2>
-          <div>fstStack: {currentFstStack(history)}</div>
-          <div>sndStack: {currentSndStack(history)}</div>
+          {renderBar('fstStack', currentFstStack(history), '#2d8cf0')}
+          {renderBar('sndStack', currentSndStack(history), '#19be6b')}
         </section>
         <section>
           <h2>アクション</h2>
@@ -63,7 +73,7 @@ function App() {
           </div>
           {(actions.includes('Bet') || actions.includes('Raise')) && (
             <div style={{ marginTop: '10px' }}>
-              <div style={{ marginBottom: '6px' }}>Bet amount: {betAmount}</div>
+              {renderBar('betAmount', betAmount, '#ff4d4f')}
               <input
                 type="range"
                 min={minValue}
