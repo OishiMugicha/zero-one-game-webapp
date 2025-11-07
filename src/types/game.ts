@@ -1,4 +1,9 @@
 /**
+ * ターンの型定義
+ */
+export type Turn = 'fst' | 'snd';
+
+/**
  * ゲームアクションの型定義
  */
 export type Action =
