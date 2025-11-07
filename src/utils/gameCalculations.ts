@@ -6,8 +6,8 @@ export function currentTurn(history: History): Turn {
 
 export function fstBetAmount(history: History): number {
   let betAmount = 0;
-  for(let i = 0; i < history.actions.length - 1; ++i){
-    if (i % 2 === 0) {
+  for(let i = 0; i < history.actions.length; ++i){
+    if (i % 2 === 1) {
       continue;
     } else {
       let action = history.actions[i];
@@ -25,8 +25,8 @@ export function fstBetAmount(history: History): number {
 
 export function sndBetAmount(history: History): number {
   let betAmount = 0;
-  for(let i = 0; i < history.actions.length - 1; ++i){
-    if (i % 2 === 1) {
+  for(let i = 0; i < history.actions.length; ++i){
+    if (i % 2 === 0) {
       continue;
     } else {
       let action = history.actions[i];
