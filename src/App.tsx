@@ -8,11 +8,11 @@ function App() {
 
   const [history, setHistory] = useState<History>({
     playerIds: ['P1', 'P2'],
-    fstHand: 0.14,
-    sndHand: 0.83,
+    fstHand: Math.random(),
+    sndHand: Math.random(),
     fstInitialStack: 0.5,
     sndInitialStack: 0.5,
-    actions: [{'type': 'Bet', 'amount': 0.2}, {'type': 'Raise', 'amount': 0.35}],
+    actions: [],
   })
 
   const actions = getAvailableActions(history)
@@ -21,6 +21,7 @@ function App() {
   const [betAmount, setBetAmount] = useState<number>(minValue)
   const colorStyle = (a: ActionType) => ({
     backgroundColor: a === 'Fold' ? 'blue'
+      : a === 'Check' ? 'green'
       : a === 'Call' ? 'green'
       : a === 'Bet' ? 'red'
       : a === 'Raise' ? 'red'
@@ -74,12 +75,23 @@ function App() {
     })
   }
 
+  const handleNewGame = () => {
+    setHistory({
+      playerIds: ['P1', 'P2'],
+      fstHand: Math.random(),
+      sndHand: Math.random(),
+      fstInitialStack: 0.5,
+      sndInitialStack: 0.5,
+      actions: [],
+    })
+  }
+
   return (
     <>
       <div className="layout-grid">
         <div className="grid-header">
           <h1>Zero-One Game</h1>
-          <div style={{ marginTop: '12px', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '12px', marginBottom: '8px' }}>
             <button
               onClick={handleRandomAction}
               style={{
@@ -94,6 +106,21 @@ function App() {
               }}
             >
               Random Action
+            </button>
+            <button
+              onClick={handleNewGame}
+              style={{
+                padding: '10px 16px',
+                fontSize: '1rem',
+                backgroundColor: '#6336f1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '500'
+              }}
+            >
+              New Game
             </button>
           </div>
         </div>
