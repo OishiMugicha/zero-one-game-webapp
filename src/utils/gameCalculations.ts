@@ -43,15 +43,47 @@ export function sndBetAmount(history: History): number {
 }
 
 export function currentPot(history: History): number {
-  return fstBetAmount(history) + sndBetAmount(history);
+  if (getGameState(history) === 'Folded' || getGameState(history) === 'Showdown'){
+    return 0;
+  } else {
+    return fstBetAmount(history) + sndBetAmount(history);
+  }
 }
 
 export function currentFstStack(history: History): number {
-  return history.fstInitialStack - fstBetAmount(history);
+  if (getGameState(history) === 'Folded'){
+    if(currentTurn(history) === 'fst'){
+      return history.fstInitialStack + sndBetAmount(history);
+    } else {
+      return history.fstInitialStack - fstBetAmount(history);
+    } 
+  } else if (getGameState(history) === 'Showdown'){
+    if(history.fstHand > history.sndHand) {
+      return history.fstInitialStack + sndBetAmount(history);
+    } else {
+      return history.fstInitialStack - fstBetAmount(history);
+    }
+  } else {
+    return history.fstInitialStack - fstBetAmount(history);
+  }
 }
 
 export function currentSndStack(history: History): number {
-  return history.sndInitialStack - sndBetAmount(history);
+  if (getGameState(history) === 'Folded'){
+    if(currentTurn(history) === 'snd'){
+      return history.sndInitialStack + fstBetAmount(history);
+    } else {
+      return history.sndInitialStack - sndBetAmount(history);
+    } 
+  } else if (getGameState(history) === 'Showdown'){
+    if(history.sndHand > history.fstHand) {
+      return history.sndInitialStack + fstBetAmount(history);
+    } else {
+      return history.sndInitialStack - sndBetAmount(history);
+    }
+  } else {
+    return history.sndInitialStack - sndBetAmount(history);
+  }
 }
 
 export function getGameState(history: History): GameState {
